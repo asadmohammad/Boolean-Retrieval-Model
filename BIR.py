@@ -93,8 +93,6 @@ def invertedIndex(invInd, postings, lex):
 
 def andOp(queryTerms):
     i = 0
-    #noTerms = len(queryTerms)
-    #tAr = [[] for _ in range(noTerms)]
     tempAr = []
     tempAr1 = []
     for query in queryTerms:
@@ -117,12 +115,34 @@ def andOp(queryTerms):
     else:
         return "notfound"
 
+def proximity_function(w1, w2,doc):
+    diff = 1
+    docu = doc
+    co = 0
+    if w1 in list(inv_Index.keys()) and w2 in list(inv_Index.keys()):
+        list1 = list(set(inv_Index[w1].keys()).intersection(set(inv_Index[w2].keys())))
+        final_list = []
+        for x in list1:
+            for y in inv_Index[w1][x]:
+                for z in inv_Index[w2][x]:
+                    print(x)
+                    d = z-y
+                    if d < 0:
+                        d = d*(-1)
+                    if d <= diff:
+                        final_list = final_list+[x]
+                        
+        
+                        
+        for p in final_list:
+            if str(p) == docu:
+                co = co +1
+    
+    return co
 
 
 def andOp2(queryTerms):
     i = 0
-    #noTerms = len(queryTerms)
-    #tAr = [[] for _ in range(noTerms)]
     tempAr = []
     tempAr2 = []
     tempAr1 = []
@@ -135,16 +155,7 @@ def andOp2(queryTerms):
     na = []
     #queryTerms = [x for x in queryTerms if x!= 'and']
     queryTerms = queryTerms.split(' and ')
-    #queryTerms = [x for x in queryTerms if x!= '']
-    #print("QueryTerms:" ,queryTerms)
-    
-    
-    
-    
-   
-    
-    
-    
+  
     
     for k in queryTerms:
         tempAr1.append(k.replace(" ",""))
@@ -156,29 +167,12 @@ def andOp2(queryTerms):
         for x  in resultSet:
             
             if i == 0 :
-                
                 tempAr.append(x)
-                #print(tempAr)
             else:
                 xtemp.insert(0,x)
-                #print(xtemp)
-                #print(tempAr)
                 tempAr2 = list((set(tempAr) & set(xtemp)))
                 
-# =============================================================================
-#             else:
-#                 utemp.append(x)
-#                 na = tempAr2.copy()
-#                 tempAr3 = list((set(tempAr2) & set(utemp)))
-# =============================================================================
 
-            #print(tempAr)
-                
-                #if (set(tempAr) & set(xtemp)):
-                 #   tempAr = set(tempAr) & set(xtemp)
-                #else:
-                 #   tem = "Nahi hai"
-                    #print(x)
         i = i + 1
     #AND    OPERATION WORKING   USING SET   PROPERTY
 # =============================================================================
@@ -225,26 +219,10 @@ def queryProcessing(queryString):
     tO = 'or'
     y = []
     
-# =============================================================================
-#     for orc in queryString:
-#         if orc == tO:
-#             orCount = orCount +1
-#     if orCount >= 1:
-# =============================================================================
     queryS = queryString.split(" or ")
     for i in queryS:
         result = andOp2(i)
-        #sInString = re.split('\W+',queryS[k])
-# =============================================================================
-#         for an in sInString:
-#             if an == ts:    
-#                 andCount = andCount +1 
-#         if andCount >= 1:
-#             result= andOp2(sInString)
-#         
-#         else:
-#             result = orOp(sInString)
-# =============================================================================
+       
         resultList.append(result)
         del result
         #del sInString
@@ -322,23 +300,6 @@ def queryProc(query):
             return at
         else:
             return "notfound"
-    
-# =============================================================================
-#         for subList in andResult:
-#               for fList in subList:
-#                   kl.append(fList)
-# =============================================================================
-# =============================================================================
-#     else:
-#         print(andResult)
-#         #te = list(dict.fromkeys(orResult[0]))
-#         #print(te)
-# =============================================================================
-
-
-
-
-    
 def orOp(queryTerms):
     tempAr = []
     queryTerms = [x for x in queryTerms if x!= '']
@@ -440,47 +401,17 @@ if __name__ == '__main__':
                da = notTermDL(z[jut+1])
                ac = ac +1
            jut = jut +1
-    
-         
-            
-           
-           
-           
            if ac == 0:
                
                finalResult = queryProcessing(x)
-# =============================================================================
-#         for an in x:
-#             if an == 'or':
-#                 ac = ac +1   
-#         for an in x:
-#             if an == 'and':
-#                 av = av +1          
-#                 
-#         if ac >= 1:        
-#             finalResult = queryProcessing(x)
-#         
-#         elif  av > 1:
-#             hav = re.split('\W+',x)
-#             finalResult = queryProc(hav)
-#         else:
-#             finalResult = queryProcessing(x)
-#     
-# =============================================================================
-     
-        
 
-    
     elif  qt == 'proximity':
-        proximitySearch(x,inv_Index)
+        proximity_function(x,inv_Index)
     if ac > 0:
         print(da)
     elif ac == 0 :
         print(finalResult)
-    #print(wonL)
-    #print(s)
-    #print(notWord)
-    #print(orOp(inputString))
+   
     
     
     
