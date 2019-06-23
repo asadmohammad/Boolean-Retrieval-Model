@@ -1,4 +1,4 @@
-# BooleanModel
+# Boolean Retrieval Model
 
 INTRODUCTION
  ------------
